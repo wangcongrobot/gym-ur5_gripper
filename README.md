@@ -1,5 +1,12 @@
 # gym-ur5_gripper
 
+## Overview
+    - [install](#install)
+    - [Robot Environments](#robot-environments)
+    - [Task Environments](#task-environments)
+      - [UR5 Reach Env](#ur5-reach-env)
+        - [Observation space](#observation-space)
+
 This is a gym environment, using ur5 robot and robotiq 3 finger gripper, in mujoco simulator.
 
 This package includes:
@@ -46,7 +53,7 @@ $ python gym-ur5_gripper/tests/test_ur5_gripper_env.py
 
 ### UR5 Reach Env
 
-####Observation space
+#### Observation space
 
 - UR5's observation space
 - plus object position and orientation
