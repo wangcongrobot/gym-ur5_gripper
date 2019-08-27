@@ -1,0 +1,158 @@
+digraph G {
+node [shape=box];
+"world" [label="world"];
+"box_link" [label="box_link"];
+"base_link" [label="base_link"];
+"base" [label="base"];
+"shoulder_link" [label="shoulder_link"];
+"upper_arm_link" [label="upper_arm_link"];
+"forearm_link" [label="forearm_link"];
+"wrist_1_link" [label="wrist_1_link"];
+"wrist_2_link" [label="wrist_2_link"];
+"wrist_3_link" [label="wrist_3_link"];
+"ee_link" [label="ee_link"];
+"tool0" [label="tool0"];
+"gripperpalm" [label="gripperpalm"];
+"gripperfinger_1_link_0" [label="gripperfinger_1_link_0"];
+"gripperfinger_1_link_1" [label="gripperfinger_1_link_1"];
+"gripperfinger_1_link_2" [label="gripperfinger_1_link_2"];
+"gripperfinger_1_link_3" [label="gripperfinger_1_link_3"];
+"gripperfinger_1_link_paradistal_hinge" [label="gripperfinger_1_link_paradistal_hinge"];
+"gripperfinger_1_link_median_actuating_hinge" [label="gripperfinger_1_link_median_actuating_hinge"];
+"gripperfinger_1_link_median_bar" [label="gripperfinger_1_link_median_bar"];
+"gripperfinger_1_link_paramedian_hinge" [label="gripperfinger_1_link_paramedian_hinge"];
+"gripperfinger_1_link_median_bar_underactuated" [label="gripperfinger_1_link_median_bar_underactuated"];
+"gripperfinger_1_link_paraproximal_actuating_hinge" [label="gripperfinger_1_link_paraproximal_actuating_hinge"];
+"gripperfinger_1_link_paraproximal_bar" [label="gripperfinger_1_link_paraproximal_bar"];
+"gripperfinger_1_link_proximal_actuating_hinge" [label="gripperfinger_1_link_proximal_actuating_hinge"];
+"gripperfinger_1_link_proximal_actuating_bar" [label="gripperfinger_1_link_proximal_actuating_bar"];
+"gripperfinger_2_link_0" [label="gripperfinger_2_link_0"];
+"gripperfinger_2_link_1" [label="gripperfinger_2_link_1"];
+"gripperfinger_2_link_2" [label="gripperfinger_2_link_2"];
+"gripperfinger_2_link_3" [label="gripperfinger_2_link_3"];
+"gripperfinger_2_link_paradistal_hinge" [label="gripperfinger_2_link_paradistal_hinge"];
+"gripperfinger_2_link_median_actuating_hinge" [label="gripperfinger_2_link_median_actuating_hinge"];
+"gripperfinger_2_link_median_bar" [label="gripperfinger_2_link_median_bar"];
+"gripperfinger_2_link_paramedian_hinge" [label="gripperfinger_2_link_paramedian_hinge"];
+"gripperfinger_2_link_median_bar_underactuated" [label="gripperfinger_2_link_median_bar_underactuated"];
+"gripperfinger_2_link_paraproximal_actuating_hinge" [label="gripperfinger_2_link_paraproximal_actuating_hinge"];
+"gripperfinger_2_link_paraproximal_bar" [label="gripperfinger_2_link_paraproximal_bar"];
+"gripperfinger_2_link_proximal_actuating_hinge" [label="gripperfinger_2_link_proximal_actuating_hinge"];
+"gripperfinger_2_link_proximal_actuating_bar" [label="gripperfinger_2_link_proximal_actuating_bar"];
+"gripperfinger_middle_link_0" [label="gripperfinger_middle_link_0"];
+"gripperfinger_middle_link_1" [label="gripperfinger_middle_link_1"];
+"gripperfinger_middle_link_2" [label="gripperfinger_middle_link_2"];
+"gripperfinger_middle_link_3" [label="gripperfinger_middle_link_3"];
+"gripperfinger_middle_link_paradistal_hinge" [label="gripperfinger_middle_link_paradistal_hinge"];
+"gripperfinger_middle_link_median_actuating_hinge" [label="gripperfinger_middle_link_median_actuating_hinge"];
+"gripperfinger_middle_link_median_bar" [label="gripperfinger_middle_link_median_bar"];
+"gripperfinger_middle_link_paramedian_hinge" [label="gripperfinger_middle_link_paramedian_hinge"];
+"gripperfinger_middle_link_median_bar_underactuated" [label="gripperfinger_middle_link_median_bar_underactuated"];
+"gripperfinger_middle_link_paraproximal_actuating_hinge" [label="gripperfinger_middle_link_paraproximal_actuating_hinge"];
+"gripperfinger_middle_link_paraproximal_bar" [label="gripperfinger_middle_link_paraproximal_bar"];
+"gripperfinger_middle_link_proximal_actuating_hinge" [label="gripperfinger_middle_link_proximal_actuating_hinge"];
+"gripperfinger_middle_link_proximal_actuating_bar" [label="gripperfinger_middle_link_proximal_actuating_bar"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"world" -> "world_joint" [label="xyz: 0 0 0.435 \nrpy: 0 -0 0"]
+"world_joint" -> "box_link"
+"box_link" -> "box_joint" [label="xyz: 0 0 0.435 \nrpy: 0 -0 0"]
+"box_joint" -> "base_link"
+"base_link" -> "base_link-base_fixed_joint" [label="xyz: 0 0 0 \nrpy: 0 0 -3.14159"]
+"base_link-base_fixed_joint" -> "base"
+"base_link" -> "shoulder_pan_joint" [label="xyz: 0 0 0.089159 \nrpy: 0 -0 0"]
+"shoulder_pan_joint" -> "shoulder_link"
+"shoulder_link" -> "shoulder_lift_joint" [label="xyz: 0 0.13585 0 \nrpy: 0 1.5708 -0"]
+"shoulder_lift_joint" -> "upper_arm_link"
+"upper_arm_link" -> "elbow_joint" [label="xyz: 0 -0.1197 0.425 \nrpy: 0 -0 0"]
+"elbow_joint" -> "forearm_link"
+"forearm_link" -> "wrist_1_joint" [label="xyz: 0 0 0.39225 \nrpy: 0 1.5708 -0"]
+"wrist_1_joint" -> "wrist_1_link"
+"wrist_1_link" -> "wrist_2_joint" [label="xyz: 0 0.093 0 \nrpy: 0 -0 0"]
+"wrist_2_joint" -> "wrist_2_link"
+"wrist_2_link" -> "wrist_3_joint" [label="xyz: 0 0 0.09465 \nrpy: 0 -0 0"]
+"wrist_3_joint" -> "wrist_3_link"
+"wrist_3_link" -> "ee_fixed_joint" [label="xyz: 0 0.0823 0 \nrpy: 0 -0 1.5708"]
+"ee_fixed_joint" -> "ee_link"
+"wrist_3_link" -> "wrist_3_link-tool0_fixed_joint" [label="xyz: 0 0.0823 0 \nrpy: -1.5708 0 0"]
+"wrist_3_link-tool0_fixed_joint" -> "tool0"
+"tool0" -> "gripperrobotiq_hand_joint" [label="xyz: 0 0 0.0423 \nrpy: 1.5708 -0 0"]
+"gripperrobotiq_hand_joint" -> "gripperpalm"
+"gripperpalm" -> "gripperpalm_finger_1_joint" [label="xyz: -0.0455 0.0214 0.036 \nrpy: 3.14159 -7.34641e-06 1.57159"]
+"gripperpalm_finger_1_joint" -> "gripperfinger_1_link_0"
+"gripperfinger_1_link_0" -> "gripperfinger_1_joint_1" [label="xyz: 0 0 0 \nrpy: 0 0 -2.0906"]
+"gripperfinger_1_joint_1" -> "gripperfinger_1_link_1"
+"gripperfinger_1_link_1" -> "gripperfinger_1_joint_2" [label="xyz: 0 0.05715 0 \nrpy: 0 -0 0"]
+"gripperfinger_1_joint_2" -> "gripperfinger_1_link_2"
+"gripperfinger_1_link_2" -> "gripperfinger_1_joint_3" [label="xyz: 0 0.039 0 \nrpy: 0 -0 2.0906"]
+"gripperfinger_1_joint_3" -> "gripperfinger_1_link_3"
+"gripperfinger_1_link_2" -> "gripperfinger_1_joint_paradistal_hinge" [label="xyz: 0 0.039 -0.01 \nrpy: 0 -0 0"]
+"gripperfinger_1_joint_paradistal_hinge" -> "gripperfinger_1_link_paradistal_hinge"
+"gripperfinger_1_link_1" -> "gripperfinger_1_joint_median_actuating_hinge" [label="xyz: 0 0.05715 0.01 \nrpy: 0 0 -0.37"]
+"gripperfinger_1_joint_median_actuating_hinge" -> "gripperfinger_1_link_median_actuating_hinge"
+"gripperfinger_1_link_median_actuating_hinge" -> "gripperfinger_1_joint_median_actuating_hinge_median_bar" [label="xyz: 0.01625 0.01516 0 \nrpy: 0 -0 2.3215"]
+"gripperfinger_1_joint_median_actuating_hinge_median_bar" -> "gripperfinger_1_link_median_bar"
+"gripperfinger_1_link_1" -> "gripperfinger_1_joint_paramedian_hinge" [label="xyz: 0 0.05715 -0.01 \nrpy: 0 -0 0"]
+"gripperfinger_1_joint_paramedian_hinge" -> "gripperfinger_1_link_paramedian_hinge"
+"gripperfinger_1_link_paramedian_hinge" -> "gripperfinger_1_joint_paramedian_hinge_median_bar_underactuated" [label="xyz: 0.01227 0.00329 0 \nrpy: 0 -0 1.5708"]
+"gripperfinger_1_joint_paramedian_hinge_median_bar_underactuated" -> "gripperfinger_1_link_median_bar_underactuated"
+"gripperfinger_1_link_0" -> "gripperfinger_1_joint_paraproximal_actuating_hinge" [label="xyz: 0 0 -0.01 \nrpy: 0 0 -2.0906"]
+"gripperfinger_1_joint_paraproximal_actuating_hinge" -> "gripperfinger_1_link_paraproximal_actuating_hinge"
+"gripperfinger_1_link_paraproximal_actuating_hinge" -> "gripperfinger_1_joint_paraproximal_bar" [label="xyz: 0.02286 0 0 \nrpy: 0 -0 1.57"]
+"gripperfinger_1_joint_paraproximal_bar" -> "gripperfinger_1_link_paraproximal_bar"
+"gripperfinger_1_link_0" -> "gripperfinger_1_joint_proximal_actuating_hinge" [label="xyz: 0 0 0.01 \nrpy: 0 0 -2.0906"]
+"gripperfinger_1_joint_proximal_actuating_hinge" -> "gripperfinger_1_link_proximal_actuating_hinge"
+"gripperfinger_1_link_proximal_actuating_hinge" -> "gripperfinger_1_joint_proximal_actuating_bar" [label="xyz: 0.02858 0 0 \nrpy: 0 -0 1.8616"]
+"gripperfinger_1_joint_proximal_actuating_bar" -> "gripperfinger_1_link_proximal_actuating_bar"
+"gripperpalm" -> "gripperpalm_finger_2_joint" [label="xyz: -0.0455 0.0214 -0.036 \nrpy: 3.14159 -7.34641e-06 1.57159"]
+"gripperpalm_finger_2_joint" -> "gripperfinger_2_link_0"
+"gripperfinger_2_link_0" -> "gripperfinger_2_joint_1" [label="xyz: 0 0 0 \nrpy: 0 0 -2.0906"]
+"gripperfinger_2_joint_1" -> "gripperfinger_2_link_1"
+"gripperfinger_2_link_1" -> "gripperfinger_2_joint_2" [label="xyz: 0 0.05715 0 \nrpy: 0 -0 0"]
+"gripperfinger_2_joint_2" -> "gripperfinger_2_link_2"
+"gripperfinger_2_link_2" -> "gripperfinger_2_joint_3" [label="xyz: 0 0.039 0 \nrpy: 0 -0 2.0906"]
+"gripperfinger_2_joint_3" -> "gripperfinger_2_link_3"
+"gripperfinger_2_link_2" -> "gripperfinger_2_joint_paradistal_hinge" [label="xyz: 0 0.039 -0.01 \nrpy: 0 -0 0"]
+"gripperfinger_2_joint_paradistal_hinge" -> "gripperfinger_2_link_paradistal_hinge"
+"gripperfinger_2_link_1" -> "gripperfinger_2_joint_median_actuating_hinge" [label="xyz: 0 0.05715 0.01 \nrpy: 0 0 -0.37"]
+"gripperfinger_2_joint_median_actuating_hinge" -> "gripperfinger_2_link_median_actuating_hinge"
+"gripperfinger_2_link_median_actuating_hinge" -> "gripperfinger_2_joint_median_actuating_hinge_median_bar" [label="xyz: 0.01625 0.01516 0 \nrpy: 0 -0 2.3215"]
+"gripperfinger_2_joint_median_actuating_hinge_median_bar" -> "gripperfinger_2_link_median_bar"
+"gripperfinger_2_link_1" -> "gripperfinger_2_joint_paramedian_hinge" [label="xyz: 0 0.05715 -0.01 \nrpy: 0 -0 0"]
+"gripperfinger_2_joint_paramedian_hinge" -> "gripperfinger_2_link_paramedian_hinge"
+"gripperfinger_2_link_paramedian_hinge" -> "gripperfinger_2_joint_paramedian_hinge_median_bar_underactuated" [label="xyz: 0.01227 0.00329 0 \nrpy: 0 -0 1.5708"]
+"gripperfinger_2_joint_paramedian_hinge_median_bar_underactuated" -> "gripperfinger_2_link_median_bar_underactuated"
+"gripperfinger_2_link_0" -> "gripperfinger_2_joint_paraproximal_actuating_hinge" [label="xyz: 0 0 -0.01 \nrpy: 0 0 -2.0906"]
+"gripperfinger_2_joint_paraproximal_actuating_hinge" -> "gripperfinger_2_link_paraproximal_actuating_hinge"
+"gripperfinger_2_link_paraproximal_actuating_hinge" -> "gripperfinger_2_joint_paraproximal_bar" [label="xyz: 0.02286 0 0 \nrpy: 0 -0 1.57"]
+"gripperfinger_2_joint_paraproximal_bar" -> "gripperfinger_2_link_paraproximal_bar"
+"gripperfinger_2_link_0" -> "gripperfinger_2_joint_proximal_actuating_hinge" [label="xyz: 0 0 0.01 \nrpy: 0 0 -2.0906"]
+"gripperfinger_2_joint_proximal_actuating_hinge" -> "gripperfinger_2_link_proximal_actuating_hinge"
+"gripperfinger_2_link_proximal_actuating_hinge" -> "gripperfinger_2_joint_proximal_actuating_bar" [label="xyz: 0.02858 0 0 \nrpy: 0 -0 1.8616"]
+"gripperfinger_2_joint_proximal_actuating_bar" -> "gripperfinger_2_link_proximal_actuating_bar"
+"gripperpalm" -> "gripperpalm_finger_middle_joint" [label="xyz: 0.0455 0.0214 0 \nrpy: 0 -0 1.57"]
+"gripperpalm_finger_middle_joint" -> "gripperfinger_middle_link_0"
+"gripperfinger_middle_link_0" -> "gripperfinger_middle_joint_1" [label="xyz: 0 0 0 \nrpy: 0 0 -2.0906"]
+"gripperfinger_middle_joint_1" -> "gripperfinger_middle_link_1"
+"gripperfinger_middle_link_1" -> "gripperfinger_middle_joint_2" [label="xyz: 0 0.05715 0 \nrpy: 0 -0 0"]
+"gripperfinger_middle_joint_2" -> "gripperfinger_middle_link_2"
+"gripperfinger_middle_link_2" -> "gripperfinger_middle_joint_3" [label="xyz: 0 0.039 0 \nrpy: 0 -0 2.0906"]
+"gripperfinger_middle_joint_3" -> "gripperfinger_middle_link_3"
+"gripperfinger_middle_link_2" -> "gripperfinger_middle_joint_paradistal_hinge" [label="xyz: 0 0.039 -0.01 \nrpy: 0 -0 0"]
+"gripperfinger_middle_joint_paradistal_hinge" -> "gripperfinger_middle_link_paradistal_hinge"
+"gripperfinger_middle_link_1" -> "gripperfinger_middle_joint_median_actuating_hinge" [label="xyz: 0 0.05715 0.01 \nrpy: 0 0 -0.37"]
+"gripperfinger_middle_joint_median_actuating_hinge" -> "gripperfinger_middle_link_median_actuating_hinge"
+"gripperfinger_middle_link_median_actuating_hinge" -> "gripperfinger_middle_joint_median_actuating_hinge_median_bar" [label="xyz: 0.01625 0.01516 0 \nrpy: 0 -0 2.3215"]
+"gripperfinger_middle_joint_median_actuating_hinge_median_bar" -> "gripperfinger_middle_link_median_bar"
+"gripperfinger_middle_link_1" -> "gripperfinger_middle_joint_paramedian_hinge" [label="xyz: 0 0.05715 -0.01 \nrpy: 0 -0 0"]
+"gripperfinger_middle_joint_paramedian_hinge" -> "gripperfinger_middle_link_paramedian_hinge"
+"gripperfinger_middle_link_paramedian_hinge" -> "gripperfinger_middle_joint_paramedian_hinge_median_bar_underactuated" [label="xyz: 0.01227 0.00329 0 \nrpy: 0 -0 1.5708"]
+"gripperfinger_middle_joint_paramedian_hinge_median_bar_underactuated" -> "gripperfinger_middle_link_median_bar_underactuated"
+"gripperfinger_middle_link_0" -> "gripperfinger_middle_joint_paraproximal_actuating_hinge" [label="xyz: 0 0 -0.01 \nrpy: 0 0 -2.0906"]
+"gripperfinger_middle_joint_paraproximal_actuating_hinge" -> "gripperfinger_middle_link_paraproximal_actuating_hinge"
+"gripperfinger_middle_link_paraproximal_actuating_hinge" -> "gripperfinger_middle_joint_paraproximal_bar" [label="xyz: 0.02286 0 0 \nrpy: 0 -0 1.57"]
+"gripperfinger_middle_joint_paraproximal_bar" -> "gripperfinger_middle_link_paraproximal_bar"
+"gripperfinger_middle_link_0" -> "gripperfinger_middle_joint_proximal_actuating_hinge" [label="xyz: 0 0 0.01 \nrpy: 0 0 -2.0906"]
+"gripperfinger_middle_joint_proximal_actuating_hinge" -> "gripperfinger_middle_link_proximal_actuating_hinge"
+"gripperfinger_middle_link_proximal_actuating_hinge" -> "gripperfinger_middle_joint_proximal_actuating_bar" [label="xyz: 0.02858 0 0 \nrpy: 0 -0 1.8616"]
+"gripperfinger_middle_joint_proximal_actuating_bar" -> "gripperfinger_middle_link_proximal_actuating_bar"
+}

@@ -1,13 +1,8 @@
 # gym-ur5_gripper
 
-## Overview
-    - [install](#install)
-    - [Robot Environments](#robot-environments)
-    - [Task Environments](#task-environments)
-      - [UR5 Reach Env](#ur5-reach-env)
-        - [Observation space](#observation-space)
-
 This is a gym environment, using ur5 robot and robotiq 3 finger gripper, in mujoco simulator.
+
+The robot xml file is from http://www.mujoco.org/forum/index.php?resources/universal-robots-ur5-robotiq-s-model-3-finger-gripper.22/
 
 This package includes:
 
@@ -20,6 +15,22 @@ This package includes:
   - UR5GripperSlide-v0
   - UR5GripperReach-v0
   - UR5GripperPush-v0
+
+## Overview
+
+- [gym-ur5_gripper](#gym-ur5gripper)
+  - [Overview](#overview)
+  - [install](#install)
+  - [Robot Environments](#robot-environments)
+    - [UR5 Env](#ur5-env)
+  - [Task Environments](#task-environments)
+    - [UR5 Reach Env](#ur5-reach-env)
+      - [Observation space](#observation-space)
+      - [Reward function](#reward-function)
+
+---
+
+
 
 ## install
 
