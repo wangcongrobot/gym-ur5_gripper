@@ -1,6 +1,6 @@
 from collections import OrderedDict
 import os
-
+import copy
 
 from gym import error, spaces
 from gym.utils import seeding
@@ -45,7 +45,7 @@ class MujocoEnv(gym.Env):
             raise IOError("File %s does not exist" % fullpath)
         self.frame_skip = frame_skip
         self.model = mujoco_py.load_model_from_path(fullpath)
-        self.sim = mujoco_py.MjSim(self.model)
+        self.sim = mujoco_py.MjSim(self.model, nsubsteps=20)
         self.data = self.sim.data
         self.viewer = None
         self.rgb_rendering_tracking = rgb_rendering_tracking
@@ -58,12 +58,13 @@ class MujocoEnv(gym.Env):
 
         self.init_qpos = self.sim.data.qpos.ravel().copy()
         self.init_qvel = self.sim.data.qvel.ravel().copy()
+        self.initial_state = copy.deepcopy(self.sim.get_state())
 
         # self._set_action_space()
 
         # override the mujoco_env action_space and observation_space
-        n_actions = 8
-        self.action_space = spaces.Box(-1., 1., shape=(n_actions,), dtype='float32')
+        self.n_actions = 4
+        self.action_space = spaces.Box(-1., 1., shape=(self.n_actions,), dtype='float32')
         # self.observation_space = spaces.Box(-np.inf, np.inf, shape=(1,), dtype=np.float32)
 
         action = self.action_space.sample()
@@ -73,6 +74,8 @@ class MujocoEnv(gym.Env):
         self._set_observation_space(observation)
 
         self.seed()
+
+        self._env_setup()
 
     def _set_action_space(self):
         bounds = self.model.actuator_ctrlrange.copy()
@@ -177,3 +180,6 @@ class MujocoEnv(gym.Env):
             self.sim.data.qpos.flat,
             self.sim.data.qvel.flat
         ])
+
+    def _env_setup(self):
+        pass

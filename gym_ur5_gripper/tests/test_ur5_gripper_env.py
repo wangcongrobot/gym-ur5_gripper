@@ -9,8 +9,9 @@ mode = 'human'
 #mode = 'rgb_array'
 
 env = gym.make("UR5Gripper-v0")
+# env = gym.make("FetchReach-v1")
 num_actuator = env.sim.model.nu
-print('num_actuator: ', num_actuator)
+# print('num_actuator: ', num_actuator)
 env.render('human')
 #env = gym.wrappers.Monitor(env, './video', force=True)
 #plt.imshow(env.render(mode='rgb_array', camera_id=-1))
@@ -18,17 +19,17 @@ env.render('human')
 for i in range(20):
   env.reset()
   env.render('human')
-  for i in range(200):
+  for i in range(20):
     action = env.action_space.sample()
     #action = [0, 0.5, 0.5, 0.5, 0.5, 0, 0]
-    print("action_space:", env.action_space)
-    print("action space sample:", action)
+    # print("action_space:", env.action_space)
+    # print("action space sample:", action)
     obs, reward, done, info = env.step(action)
-    print("observation:", obs)
-    print("reward:", reward)
-    print("done:", done)
-    print("info:", info)
+    # print("observation:", obs)
+    # print("reward:", reward)
+    # print("done:", done)
+    # print("info:", info)
     env.render('human')
-    print("number actuator: ", num_actuator)
-    print("name: ", env.sim.model.name_actuatoradr)
-    print("actuator contrl range: ", env.sim.model.actuator_ctrlrange)
+    # print("number actuator: ", num_actuator)
+    # print("name: ", env.sim.model.name_actuatoradr)
+    # print("actuator contrl range: ", env.sim.model.actuator_ctrlrange)

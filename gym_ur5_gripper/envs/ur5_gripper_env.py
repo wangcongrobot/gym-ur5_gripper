@@ -11,30 +11,31 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def __init__(self, 
                  reward_type=True,
-                 n_actions=8,
                  has_object=True):
 
         utils.EzPickle.__init__(self)
-        mujoco_env.MujocoEnv.__init__(self, 'ur5_gripper/ur5_gripper.xml', 5)
+        mujoco_env.MujocoEnv.__init__(self, 'ur5_gripper/ur5_gripper.xml', frame_skip=5)
 
         # override the mujoco_env action_space and observation_space
-        # self.action_space = spaces.Box(-1., 1., shape=(n_actions,), dtype='float32')
+        # self.action_space = spaces.Box(-1., 1., shape=(self.n_actions,), dtype='float32')
         # self.observation_space = spaces.Box(-np.inf, np.inf, shape=(1,), dtype=np.float32)
         
         self.viewer = self._get_viewer('human')
 
         self.reward_type = reward_type
         # 3(pos of end-effector) + 4(quat of end-effector) + 1(gripper)
-        self.n_actions = n_actions
+        # self.n_actions = n_actions
         # (x,y,z)
         self.arm_dof = 3
         self.gripper_dof =1
         self.dof = self.arm_dof + self.gripper_dof
 
         self.has_object = True
-
-        self.initial_gripper_xpos = None
+        
+        self.initial_gripper_mocap_pos = self.sim.data.get_mocap_pos('robot0:mocap')
         self.obj_range = 0.15
+
+        # super(UR5GripperEnv, self).__init__()
 
 
     def step(self, action):
@@ -76,8 +77,8 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         print("one step reward: ", reward)
 
         done = False
-        # if self.sim.data.get_site_xpos('object')[2] < 0.1:
-            # done = True
+        if self.sim.data.get_site_xpos('object')[2] < 0.05:
+            done = True
         return reward, done
     
     def reward(self, action):
@@ -91,14 +92,15 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         """
         # importance degree of four shaping reward
         control_mult = -0.01
-        reach_mult = 0.1
-        grasp_mult = 1.0
+        reach_mult = -0.1
+        grasp_mult = 10.
         lift_mult = 0.5
         hover_mult = 0.7
+        collision_mult = 1.
 
         # control reward
         reward_ctrl = np.square(action).sum() * control_mult
-        #reward_ctrl = 0.
+        # reward_ctrl = 0.
         print("reward_ctrl: ", reward_ctrl)
 
         # following reward
@@ -110,7 +112,8 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         dist = np.linalg.norm(palm_pos - obj_pos)
         # the larger distance, the fewer reward
         # convert the dist to range (0, 1)
-        reward_reach = (1 - np.tanh(1.0 * dist)) * reach_mult
+        # reward_reach = (1 - np.tanh(1.0 * dist)) * reach_mult
+        reward_reach = - dist
         print("reward_reach: ", reward_reach)
 
         # grasping reward
@@ -120,8 +123,11 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
         # lifting reward
 
+        # collision reward: if the fingers touch the object
+        reward_finger_touch = int(self._check_collision()) * collision_mult
+        print("reward_finger_touch: ", reward_finger_touch)
 
-        return reward_ctrl, reward_reach, reward_grasp
+        return reward_ctrl, reward_reach, reward_grasp, reward_finger_touch
 
 
     def _check_grasp(self):
@@ -210,6 +216,99 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         return has_grasp
 
 
+    def _check_collision(self):
+        """
+        Return True if the gripper has collision with the object.
+        Using the contact detection between gripper and object.
+        It includes: three fingers and the palm
+        """
+        # get the contact geom information from ur5_keep_up.xml file
+        finger_1_geom_names = ["f1_l0", "f1_l1", "f1_l2", "f1_l3"]
+        finger_2_geom_names = ["f2_l0", "f2_l1", "f2_l2", "f2_l3"]
+        finger_3_geom_names = ["f3_l0", "f3_l1", "f3_l2", "f3_l3"]
+        palm_geom_name = "gripperpalm"
+        object_geom_name = "object"
+
+        # get the geom ids from the names
+        finger_1_geom_ids = [
+            self.sim.model.geom_name2id(x) for x in finger_1_geom_names
+        ]
+        finger_2_geom_ids = [
+            self.sim.model.geom_name2id(x) for x in finger_2_geom_names
+        ]
+        finger_3_geom_ids = [
+            self.sim.model.geom_name2id(x) for x in finger_3_geom_names
+        ]
+        palm_geom_id = self.sim.model.geom_name2id(palm_geom_name)
+        object_geom_id = self.sim.model.geom_name2id(object_geom_name)
+
+        # touch/contact detection flag
+        touch_finger_1 = False
+        touch_finger_2 = False
+        touch_finger_3 = False
+        touch_palm = False
+        # has_grasp = False
+        has_collision = False
+
+        # int ncon: number of detected contacts
+        for i in range(self.sim.data.ncon):
+            # list of all detected contacts
+            contact = self.sim.data.contact[i]
+            # if the object is in the detected contact geom1
+            if contact.geom1 == object_geom_id:
+                # wether the finger 1 in the detected contacts
+                if contact.geom2 in finger_1_geom_ids:
+                    # result: finger 1 touched the object
+                    touch_finger_1 = True
+                if contact.geom2 in finger_2_geom_ids:
+                    # finger 2 touched the object
+                    touch_finger_2 = True
+                if contact.geom2 in finger_3_geom_ids:
+                    # finger 3 touched the object
+                    touch_finger_3 = True
+                if contact.geom2 == palm_geom_id:
+                    # palm touched the object
+                    touch_palm = True
+            # if the object is in the detected contact geom2
+            elif contact.geom2 == object_geom_id:
+                if contact.geom1 in finger_1_geom_ids:
+                    # finger 1 touched the object
+                    touch_finger_1 = True
+                if contact.geom1 in finger_2_geom_ids:
+                    # finger 2 touched the object
+                    touch_finger_2 = True
+                if contact.geom1 in finger_3_geom_ids:
+                    # finger 3 touched the object
+                    touch_finger_3 = True
+                if contact.geom1 == palm_geom_id:
+                    # palm touched the object
+                    touch_palm = True
+
+        if touch_finger_1:
+            has_collision = True 
+        if touch_finger_2:
+            has_collision = True
+        if touch_finger_3:
+            has_collision = True
+        if touch_palm:
+            has_collision = True
+        # # TODO: two finger may also has grasp
+        # # the palm touch must be true first
+        # if touch_palm:
+        #     # has three finger touch must be true
+        #     if touch_finger_1 and touch_finger_2 and touch_finger_3:
+        #         has_grasp = True
+        #     # has two finger touch maybe true
+        #     elif touch_finger_1 and touch_finger_3:
+        #         has_grasp = True
+        #     # has two finger touch maybe true
+        #     elif touch_finger_2 and touch_finger_3:
+        #         has_grasp = True
+        # if has_grasp:
+        #     print("Get a successful grasp!")
+
+        return has_collision
+
     def _check_success(self):
         """
         Return True if task has been completed.
@@ -252,41 +351,58 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def reset_model(self):
         qp = self.init_qpos.copy()
         qv = self.init_qvel.copy()
-        self.set_state(qp, qv)
+
+        # self.set_state(qp, qv)
+        # print("self.initial_state: ", self.initial_state)
+        self.set_state(self.initial_state.qpos, self.initial_state.qvel)
+
+        did_reset_sim = False
+        while not did_reset_sim:
+            did_reset_sim = self._reset_sim()
         
         mujoco_utils.reset_mocap_welds(self.sim)
         self.sim.forward()
 
         # Move end-effector into position.
-        gripper_target = np.array([-0.498, 0.005, -0.431]) + self.sim.data.get_site_xpos('gripperpalm')
-        gripper_rotation = np.array([0., 0., 1., 0.]) # fixed oritation to grasp
-        self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
-        self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
-        for _ in range(10):
-            self.sim.step()
+        # gripper_target = np.array([-0.498, 0.005, -0.431]) + self.sim.data.get_site_xpos('gripperpalm')
+        # gripper_target = self.initial_gripper_mocap_pos
+        # gripper_rotation = np.array([0., 0., 1., 0.]) # fixed oritation to grasp
+        # self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
+        # self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
+        # for _ in range(10):
+        #     self.sim.step()
 
         # Extract information for sampling goals.
-        self.initial_gripper_xpos = self.sim.data.get_site_xpos('gripperpalm').copy()
+        # self.initial_gripper_xpos = self.sim.data.get_site_xpos('gripperpalm').copy()
 
-        self._reset_sim()
+        self._reset_random_xy_target()
 
-        return self._get_obs()
-
-    def _reset_sim(self):
+        return self._get_obs(    def _reset_random_xy_target(self):
         # self.sim.set_state(self.initial_state)
         # self._restart_target()
 
         # Randomize start position of object.
         # object joint type: free
         if self.has_object:
-            object_xpos = self.initial_gripper_xpos[:2]
-            while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1:
-                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
+            # object_xpos = self.initial_gripper_mocap_pos
+            # while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1:
+                # object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
+            # random x and y, not z: [0.1245, -0.245]
+            object_xpos = [0.8, 0.5] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
+            # object_xpos[2] += 1.
+            print("gripper_mocap_pos: ", self.initial_gripper_mocap_pos)
+            print("object_xpos: ", object_xpos)
             object_qpos = self.sim.data.get_joint_qpos('object:joint')
+            print("ojbect_qpos: ", object_qpos)
             assert object_qpos.shape == (7,)
             object_qpos[:2] = object_xpos
             self.sim.data.set_joint_qpos('object:joint', object_qpos)
 
+        self.sim.forward()
+        return True
+
+    def _reset_sim(self):
+        self.sim.set_state(self.initial_state)
         self.sim.forward()
         return True
 
@@ -302,11 +418,11 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     # arm end-effector cartesion control
     def _pre_action_cartesion(self, action):
         print("_set_action:", action)
-        # assert action.shape == (self.n_actions,) # 8
-        assert action.shape == (8,)
+        assert action.shape == (self.n_actions,) # 4
+        # assert action.shape == (8,)
         self.action = action
         action = action.copy()  # ensure that we don't change the action outside of this scope
-        pos_ctrl, gripper_ctrl = action[:3], action[7:]
+        pos_ctrl, gripper_ctrl = action[:3], action[-1:]
 
         # arm end-effector cartesion control
         pos_ctrl *= 0.05  # limit maximum change in position
@@ -317,12 +433,12 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         #     gripper_ctrl = np.zeros_like(gripper_ctrl)
 
         arm_action = np.concatenate([pos_ctrl, rot_ctrl])
-        print("arm_action: ", action)
+        print("arm_action: ", arm_action)
 
         # Apply arm action to simulation.
         # use mocap to control the arm end-effector
         # mujoco_utils.ctrl_set_action(self.sim, action)
-        mujoco_utils.mocap_set_action(self.sim, action)
+        mujoco_utils.mocap_set_action(self.sim, arm_action)
 
         # gripper joint control
         # rescale normalized action to control ranges
@@ -377,7 +493,7 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         if dist <= 0.05:
             self.gripper_format_action(-1) # close the gripper
 
-    # self.action_space = spaces.Box(-1., 1., shape=(n_actions,), dtype='float32')
+    # self.action_space = spaces.Box(-1., 1., shape=(self.n_actions,), dtype='float32')
     @property
     def action_spec(self):
         """
@@ -398,3 +514,14 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         movement = np.array([0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1])
         return -1 * movement * action
 
+    def _env_setup(self):
+        mujoco_utils.reset_mocap_welds(self.sim)
+        self.sim.forward()
+
+        # Move end effector into position.
+        gripper_target = np.array([0, 0, 0] + self.sim.data.get_mocap_pos('gripperpalm'))
+        gripper_rotation = np.array([0., 0., 1.0, 0.]) # fixed oritation of gripper
+        self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
+        self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
+        for _ in range(10):
+            self.sim.step()
