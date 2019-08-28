@@ -118,7 +118,7 @@ def evaluate(model, num_steps=1000):
 
 
 # Create log dir
-log_dir = "/tmp/gym/"
+log_dir = "/tmp/gym/sac"
 os.makedirs(log_dir, exist_ok=True)
 
 # Create and wrap the environment
@@ -145,7 +145,7 @@ model = SAC(MlpPolicy, env, verbose=1, tensorboard_log=log_dir)
 mean_reward_before_train = evaluate(model, num_steps=1000)
 
 # Train the agent
-model.learn(total_timesteps=int(1e6), callback=callback)
+model.learn(total_timesteps=int(1e7), callback=callback)
 
 mean_reward_after_train = evaluate(model, num_steps=1000)
 

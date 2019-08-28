@@ -8,6 +8,7 @@ from stable_baselines import logger
 from stable_baselines.trpo_mpi import TRPO
 import stable_baselines.common.tf_util as tf_util
 
+import gym_ur5_gripper
 
 def train(env_id, num_timesteps, seed):
     """
@@ -23,7 +24,7 @@ def train(env_id, num_timesteps, seed):
             logger.configure()
         else:
             logger.configure(format_strs=[])
-            logger.set_level(logger.DISABLED)
+            logger.set_level(logger.DEBUG)
         workerseed = seed + 10000 * MPI.COMM_WORLD.Get_rank()
 
         env = make_mujoco_env(env_id, workerseed)
@@ -36,6 +37,18 @@ def train(env_id, num_timesteps, seed):
 def main():
     """
     Runs the test
+    """
+    """
+    Create an argparse.ArgumentParser for run_mujoco.py.
+
+    :return:  (ArgumentParser) parser {'--env': 'Reacher-v2', '--seed': 0, '--num-timesteps': int(1e6), '--play': False}
+
+    parser = arg_parser()
+    parser.add_argument('--env', help='environment ID', type=str, default='Reacher-v2')
+    parser.add_argument('--seed', help='RNG seed', type=int, default=0)
+    parser.add_argument('--num-timesteps', type=int, default=int(1e6))
+    parser.add_argument('--play', default=False, action='store_true')
+    return parse
     """
     args = mujoco_arg_parser().parse_args()
     train(args.env, num_timesteps=args.num_timesteps, seed=args.seed)

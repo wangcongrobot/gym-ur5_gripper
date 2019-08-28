@@ -91,7 +91,7 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         Stages consist of following, reaching, grasping, lifting, and hovering.
         """
         # importance degree of four shaping reward
-        control_mult = -0.01
+        control_mult = -0.05
         reach_mult = -0.1
         grasp_mult = 10.
         lift_mult = 0.5
@@ -377,7 +377,9 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
         self._reset_random_xy_target()
 
-        return self._get_obs(    def _reset_random_xy_target(self):
+        return self._get_obs()
+    
+    def _reset_random_xy_target(self):
         # self.sim.set_state(self.initial_state)
         # self._restart_target()
 
@@ -450,7 +452,7 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         weight = 0.5 * (ctrl_range[:, 1] - ctrl_range[:, 0])
         applied_action = bias + weight * gripper_action_actual
         print("applied_action: ", applied_action)
-        # self.sim.data.ctrl[:] = applied_action[:] # don't use a random action for gripper
+        self.sim.data.ctrl[:] = applied_action[:] # don't use a random action for gripper
 
     # arm joint control
     def _pre_action_joint(self, action):

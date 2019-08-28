@@ -40,3 +40,14 @@ control mode:
 - 1-dof mode
 
 open/close
+
+## debug log
+
+change the gravity from -9.81 to -1.81, because the dropped velocity is too fast.
+
+
+
+
+
+
+

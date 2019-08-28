@@ -27,6 +27,7 @@ This package includes:
     - [UR5 Reach Env](#ur5-reach-env)
       - [Observation space](#observation-space)
       - [Reward function](#reward-function)
+    - [Gripper](#gripper)
 
 ---
 
@@ -49,7 +50,7 @@ $ python gym-ur5_gripper/tests/test_ur5_gripper_env.py
 ### UR5 Env
 
 - Action space:
-  - Cartesian space: hand 6D pose (x,y,z), (w,x,y,z)
+  - Cartesian space: hand 3D pose (x,y,z)
   - Joint space: torse and arm joint positions
 
 
@@ -90,5 +91,22 @@ if d <= self._target_dist_min:
     return reward
 
 ```
+### Gripper
 
+The Robotiq 3 finger gripper has 11 dof, the control mode includes torque control, position control and so on.
 
+We use position control, and change the 11-dof joint control into a 1-dof open/close action.
+
+```python
+
+def gripper_format_action(self, action):
+    """ Given (-1,1) abstract control as np-array return the (-1,1) control signals
+    for underlying actuators as 1-d np array
+    Args:
+        action: 1 => open, -1 => closed
+    """
+    movement = np.array([0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1])
+    return -1 * movement * action
+```
+
+P.S.: 1 => open, 0 => close, (0,1) => grasp

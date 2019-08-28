@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from stable_baselines import logger
-# from stable_baselines.ddpg.policies import MlpPolicy
-from stable_baselines.common.policies import MlpPolicy
+from stable_baselines.ddpg.policies import MlpPolicy
+# from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.bench import Monitor
 from stable_baselines.results_plotter import load_results, ts2xy
 from stable_baselines import DDPG, PPO2
@@ -146,7 +146,7 @@ model = DDPG(MlpPolicy, env, param_noise=param_noise, verbose=1, tensorboard_log
 mean_reward_before_train = evaluate(model, num_steps=1000)
 
 # Train the agent
-model.learn(total_timesteps=int(1e6), callback=callback)
+model.learn(total_timesteps=int(1e7), callback=callback)
 
 mean_reward_after_train = evaluate(model, num_steps=1000)
 

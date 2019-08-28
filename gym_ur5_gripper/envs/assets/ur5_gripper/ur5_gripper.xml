@@ -20,7 +20,7 @@ Control Engineering / Automation Engineering
             iterations="10"
             tolerance="1e-10"
             impratio="20"
-            gravity="0 0 -9.81" />
+            gravity="0 0 -1.81" />
     <size njmax="600" nconmax="150" nstack="300000"/>
 
     <default>
