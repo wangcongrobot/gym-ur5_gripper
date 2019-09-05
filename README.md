@@ -11,10 +11,6 @@ This package includes:
   - gripper env
 - Task environments
   - UR5GripperCatchBall-v0
-  - UR5GripperPickAndPlace-v0
-  - UR5GripperSlide-v0
-  - UR5GripperReach-v0
-  - UR5GripperPush-v0
 
 ## Overview
 
@@ -51,7 +47,7 @@ $ python gym-ur5_gripper/tests/test_ur5_gripper_env.py
 
 - Action space:
   - Cartesian space: hand 3D pose (x,y,z)
-  - Joint space: torse and arm joint positions
+  - Gripper action: open/close
 
 
 - Observation space:
@@ -79,18 +75,7 @@ In this environment, the reward function is given by:
 
 Here is the code used to compute the reward function:
 
-```python
 
-reward = np.float(32.0)
-objPos, objOrn = p.getBsePositionAndOrientation(self._objID)
-endEffAct = self._panda.getObservation()[0:3]
-d = goal_distance(np.array(endEffAct), np.array(objPos))
-reward = -d
-if d <= self._target_dist_min:
-    reawrd = np.float32(1000.0) + (100 - d*80)
-    return reward
-
-```
 ### Gripper
 
 The Robotiq 3 finger gripper has 11 dof, the control mode includes torque control, position control and so on.

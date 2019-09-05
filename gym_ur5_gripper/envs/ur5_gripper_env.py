@@ -74,7 +74,7 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             # reward += max(staged_rewards)
         staged_rewards = self.staged_rewards(action)
         reward = np.sum(staged_rewards)
-        print("one step reward: ", reward)
+        # print("one step reward: ", reward)
 
         done = False
         if self.sim.data.get_site_xpos('object')[2] < 0.05:
@@ -101,7 +101,7 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         # control reward
         reward_ctrl = np.square(action).sum() * control_mult
         # reward_ctrl = 0.
-        print("reward_ctrl: ", reward_ctrl)
+        # print("reward_ctrl: ", reward_ctrl)
 
         # following reward
 
@@ -114,18 +114,18 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         # convert the dist to range (0, 1)
         # reward_reach = (1 - np.tanh(1.0 * dist)) * reach_mult
         reward_reach = - dist
-        print("reward_reach: ", reward_reach)
+        # print("reward_reach: ", reward_reach)
 
         # grasping reward
         # int(False) = 0 int(True) = 1
         reward_grasp = int(self._check_grasp()) * grasp_mult
-        print("reward_grasp: ", reward_grasp)
+        # print("reward_grasp: ", reward_grasp)
 
         # lifting reward
 
         # collision reward: if the fingers touch the object
         reward_finger_touch = int(self._check_collision()) * collision_mult
-        print("reward_finger_touch: ", reward_finger_touch)
+        # print("reward_finger_touch: ", reward_finger_touch)
 
         return reward_ctrl, reward_reach, reward_grasp, reward_finger_touch
 
@@ -392,13 +392,13 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             # random x and y, not z: [0.1245, -0.245]
             object_xpos = [0.8, 0.5] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
             # object_xpos[2] += 1.
-            print("gripper_mocap_pos: ", self.initial_gripper_mocap_pos)
-            print("object_xpos: ", object_xpos)
+            # print("gripper_mocap_pos: ", self.initial_gripper_mocap_pos)
+            # print("object_xpos: ", object_xpos)
             object_qpos = self.sim.data.get_joint_qpos('object:joint')
-            print("ojbect_qpos: ", object_qpos)
+            # print("ojbect_qpos: ", object_qpos)
             assert object_qpos.shape == (7,)
             object_qpos[:2] = object_xpos
-            self.sim.data.set_joint_qpos('object:joint', object_qpos)
+            # self.sim.data.set_joint_qpos('object:joint', object_qpos)
 
         self.sim.forward()
         return True
@@ -419,7 +419,7 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     # arm end-effector cartesion control
     def _pre_action_cartesion(self, action):
-        print("_set_action:", action)
+        # print("_set_action:", action)
         assert action.shape == (self.n_actions,) # 4
         # assert action.shape == (8,)
         self.action = action
@@ -435,7 +435,7 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         #     gripper_ctrl = np.zeros_like(gripper_ctrl)
 
         arm_action = np.concatenate([pos_ctrl, rot_ctrl])
-        print("arm_action: ", arm_action)
+        # print("arm_action: ", arm_action)
 
         # Apply arm action to simulation.
         # use mocap to control the arm end-effector
@@ -444,14 +444,14 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
         # gripper joint control
         # rescale normalized action to control ranges
-        print("gripper_ctrl: ", gripper_ctrl)
+        # print("gripper_ctrl: ", gripper_ctrl)
         gripper_action_actual = self.gripper_format_action(gripper_ctrl)
-        print("gripper_cation_actual: ", gripper_action_actual)
+        # print("gripper_cation_actual: ", gripper_action_actual)
         ctrl_range = self.sim.model.actuator_ctrlrange
         bias = 0.5 * (ctrl_range[:, 1] + ctrl_range[:, 0])
         weight = 0.5 * (ctrl_range[:, 1] - ctrl_range[:, 0])
         applied_action = bias + weight * gripper_action_actual
-        print("applied_action: ", applied_action)
+        # print("applied_action: ", applied_action)
         self.sim.data.ctrl[:] = applied_action[:] # don't use a random action for gripper
 
     # arm joint control
@@ -477,14 +477,14 @@ class UR5GripperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         gripper_action_actual = self.gripper_format_action(gripper_action_in)
         # 17 = 6 + 11
         action = np.concatenate([arm_action, gripper_action_actual])
-        print("action: ", action)
+        # print("action: ", action)
 
         # rescale normalized action to control ranges
         ctrl_range = self.sim.model.actuator_ctrlrange
         bias = 0.5 * (ctrl_range[:, 1] + ctrl_range[:, 0])
         weight = 0.5 * (ctrl_range[:, 1] - ctrl_range[:, 0])
         applied_action = bias + weight * action
-        print("applied_action: ", applied_action)
+        # print("applied_action: ", applied_action)
         self.sim.data.ctrl[:] = applied_action
 
     def _post_action(self, action):
