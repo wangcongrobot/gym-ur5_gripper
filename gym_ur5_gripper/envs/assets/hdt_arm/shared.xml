@@ -1,0 +1,89 @@
+<mujoco>
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="0.44 0.85 0.56" rgb2="0.46 0.87 0.58" width="32" height="32"></texture>
+        <texture name="texture_block" file="block.png" gridsize="3 4" gridlayout=".U..LFRB.D.."></texture>
+
+        <material name="floor_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="table_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.93 0.93 0.93 1"></material>
+        <material name="block_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="puck_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="robot0:geomMat" shininess="0.03" specular="0.4"></material>
+        <material name="robot0:gripper_finger_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:gripper_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:arm_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:head_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:torso_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:base_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        
+        <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>
+        <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>
+        <texture builtin="checker" height="100" name="texplane" rgb1="0 0 0" rgb2="0.8 0.8 0.8" type="2d" width="100"/>
+
+        <material name="MatPlane" reflectance="0.5" shininess="1" specular="1" texrepeat="60 60" texture="texplane"/>
+        <material name="geom" texture="texgeom" texuniform="true"/>
+
+        <mesh name="hdt_mk3_m_ik" file="hdt_mk3_m_ik.STL" />
+        <mesh name="hdt_mk3_m_0" file="hdt_mk3_m_0.STL" />
+        <mesh name="hdt_mk3_m_1" file="hdt_mk3_m_1.STL" />
+        <mesh name="hdt_mk3_m_2a" file="hdt_mk3_m_2a.STL" />
+        <mesh name="hdt_mk3_m_2b" file="hdt_mk3_m_2b.STL" />
+        <mesh name="hdt_mk3_m_3" file="hdt_mk3_m_3.STL" />
+        <mesh name="hdt_mk3_m_4a" file="hdt_mk3_m_4a.STL" />
+        <mesh name="hdt_mk3_m_4b" file="hdt_mk3_m_4b.STL" />
+        <mesh name="hdt_mk3_m_5" file="hdt_mk3_m_5.STL" />
+        <mesh name="hdt_mk3_m_6a" file="hdt_mk3_m_6a.STL" />
+        <mesh name="hdt_mk3_m_6b" file="hdt_mk3_m_6b.STL" />
+        <mesh name="hdt_mk3_m_7" file="hdt_mk3_m_7.STL" />
+        <mesh name="hdt_mk3_m_palm" file="hdt_mk3_m_palm.STL" />
+        <mesh name="hdt_mk3_m_palm_pad" file="hdt_mk3_m_palm_pad.STL" />
+        <mesh name="hdt_mk3_m_camera_bracket" file="hdt_mk3_m_camera_bracket.STL" />
+        <mesh name="hdt_mk3_m_camera" file="hdt_mk3_m_camera.STL" />
+        <mesh name="hdt_mk3_m_thumb_base" file="hdt_mk3_m_thumb_base.STL" />
+        <mesh name="hdt_mk3_m_thumb_pad" file="hdt_mk3_m_thumb_pad.STL" />
+        <mesh name="hdt_mk3_m_thumb_prox" file="hdt_mk3_m_thumb_prox.STL" />
+        <mesh name="hdt_mk3_m_thumb_med" file="hdt_mk3_m_thumb_med.STL" />
+        <mesh name="hdt_mk3_m_thumb_dist" file="hdt_mk3_m_thumb_dist.STL" />
+        <mesh name="hdt_6dof_index_prox" file="hdt_6dof_index_prox.STL" />
+        <mesh name="hdt_mk3_m_finger_med" file="hdt_mk3_m_finger_med.STL" />
+        <mesh name="hdt_mk3_m_finger_dist" file="hdt_mk3_m_finger_dist.STL" />
+        <mesh name="hdt_6dof_ring_prox" file="hdt_6dof_ring_prox.STL" />
+    </asset>
+
+    <equality>
+    <!-- contrl the end-effector using mocap body, cartesion control -->
+    <!-- TODO: thumb_base need to change -->
+        <weld body1="robot0:mocap" body2="thumb_base" relpose="0.5 0.5 0.5 0 0 0 0" solimp="0.9 0.95 0.001" solref="0.02 1"></weld>
+    </equality>
+    
+    <!-- <contact>
+        <exclude body1="robot0:r_gripper_finger_link" body2="robot0:l_gripper_finger_link"></exclude>
+        <exclude body1="robot0:torso_lift_link" body2="robot0:torso_fixed_link"></exclude>
+        <exclude body1="robot0:torso_lift_link" body2="robot0:shoulder_pan_link"></exclude>
+    </contact> -->
+    
+    <default>
+        <default class="robot0:hdt_arm">
+            <geom margin="0.001" material="robot0:geomMat" rgba="1 1 1 1" solimp="0.99 0.99 0.01" solref="0.01 1" type="mesh" user="0"></geom>
+            <joint armature="1" damping="50" frictionloss="0" stiffness="0"></joint>
+            
+            <default class="robot0:hdt_gripper">
+                <geom condim="4" margin="0.001" type="box" user="0" rgba="0.356 0.361 0.376 1.0"></geom>
+                <joint armature="100" damping="1000" limited="true" solimplimit="0.99 0.999 0.01" solreflimit="0.01 1" type="slide"></joint>
+            </default>
+
+            <default class="robot0:grey">
+                <geom rgba="0.356 0.361 0.376 1.0"></geom>
+            </default>
+            <default class="robot0:blue">
+                <geom rgba="0.086 0.506 0.767 1.0"></geom>
+            </default>
+        </default>
+    </default>
+
+    <default>
+        <!-- <joint armature="1" damping="1" limited="true"/> -->
+        <joint armature="1" damping="1" />
+        <geom conaffinity="0" condim="3" density="5.0" friction="1 0.5 0.5" margin="0.01" rgba="0.8 0.6 0.4 1"/>
+    </default>
+
+</mujoco>

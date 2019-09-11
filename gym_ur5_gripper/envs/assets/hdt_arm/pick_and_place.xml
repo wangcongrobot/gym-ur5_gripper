@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco>
+	<compiler angle="radian" coordinate="local" meshdir="./meshes" texturedir="./textures"></compiler>
+	<option timestep="0.002">
+		<flag warmstart="enable"></flag>
+        <!-- <flag integrator="RK4"></flag> -->
+	</option>
+
+    <size njmax="500" nconmax="100" />
+
+	<include file="shared.xml"></include>
+	
+
+
+	<worldbody>
+		<geom name="floor0" pos="0.8 0.75 0" size="0.85 0.7 1" type="plane" condim="3" material="floor_mat"></geom>
+		<body name="floor0" pos="0.8 0.75 0">
+			<site name="target0" pos="0 0 0.5" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+		</body>
+
+        <!-- the coordination of the end-effector: x, y, z and box -->
+        <body mocap="true" name="robot0:mocap" pos="0 0.5 0">
+            <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.7" size="0.005 0.005 0.005" type="box"></geom>
+            <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="1 0.005 0.005" type="box"></geom>
+            <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 1 0.001" type="box"></geom>
+            <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 0.005 1" type="box"></geom>
+        </body>
+
+        <camera name="track" mode="trackcom" pos="0 -3 0.3" xyaxes="1 0 0 0 0 1"/>
+
+		<include file="robot.xml"></include>
+		
+		<body pos="1.3 0.75 0.2" name="table0">
+			<geom size="0.25 0.35 0.2" type="box" mass="2000" material="table_mat"></geom>
+		</body>
+		
+		<body name="object0" pos="0.025 0.025 0.025">
+			<joint name="object0:joint" type="free" damping="0.01"></joint>
+			<geom size="0.025 0.025 0.025" type="box" condim="3" name="object0" material="block_mat" mass="2"></geom>
+			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
+		</body>
+
+		<light directional="true" ambient="0.2 0.2 0.2" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" castshadow="false" pos="0 0 4" dir="0 0 -1" name="light0"></light>
+
+        <!-- Dynamic Target -->
+		<body name="object" pos="0.9 1.2 1.5">
+			<!-- <joint axis="1 0 0" damping="0.01" name="tar:x" pos="0 0 0" stiffness="0" type="slide" frictionloss="0"/>
+			<joint axis="0 1 0" damping="0.01" name="tar:y" pos="0 0 0" stiffness="0" type="slide" frictionloss="0"/>
+			<joint axis="0 0 1" damping="0.01" name="tar:z" pos="0 0 0" stiffness="0" type="slide" frictionloss="0"/> -->
+            <joint name="object:joint" type="free" damping="0.01"></joint>
+            <!-- catch -->
+			<!-- <geom size="0.025 0.025 0.025" type="sphere" condim="3" name="tar" rgba="1 0 0 1" mass="2"/> -->
+
+            <!-- keep up; for contact detection -->
+            <geom name="object" size="0.04 0.04 0.04" type="sphere" condim="1" rgba="1 0 0 1" mass="0.1" friction="0 0 0" solimp="1 1 0"  solref="0.1 0.03"/>
+
+			<site name="object" pos="0 0 0" size="0.04 0.04 0.04" rgba="1 0 0 1" type="sphere"/>
+			<!--<geom conaffinity="0" contype="0" name="target" pos="0 0 0" rgba="0.9 0.2 0.2 1" size=".009" type="sphere"/>-->
+		</body>    
+
+        <!-- ======= DESTINATION ======= -->
+        <site name="target" pos="0.5 0.5 0.6" size="0.02 0.02 0.02" rgba="0 1 0 0.125" />
+
+	</worldbody>
+
+    <tendon>
+		<!--Middlefinger tendons-->
+		<fixed name="middle12_cpl" range="0 1">
+			<joint joint="thumb_prox"  coef="0.1"/>
+			<joint joint="thumb_med"  coef="-0.1"/>
+		</fixed>
+		<fixed name="middle23_cpl" range="0 1">
+			<joint joint="thumb_med"  coef="0.1"/>
+			<joint joint="thumb_dist"  coef="-0.1"/>
+		</fixed>
+
+		<!--finger2 tendons-->
+        <fixed name="finger2_12_cpl" range="0 1">
+			<joint joint="index_prox"  coef="0.1"/>
+			<joint joint="index_med"  coef="-0.1"/>
+		</fixed>
+		<fixed name="finger2_23_cpl" range="0 1">
+			<joint joint="index_med"  coef="0.1"/>
+			<joint joint="index_dist"  coef="-0.1"/>
+		</fixed>
+
+		<!--Finger1 tendons-->
+        <fixed name="finger1_12_cpl" range="0 1">
+			<joint joint="ring_prox"  coef="0.1"/>
+			<joint joint="ring_med"  coef="-0.1"/>
+		</fixed>
+		<fixed name="finger1_23_cpl" range="0 1">
+			<joint joint="ring_med"  coef="0.1"/>
+			<joint joint="ring_dist"  coef="-0.1"/>
+		</fixed>
+	</tendon>
+
+    <equality>
+		<!-- GRIPPER Couplings -->
+		<tendon name="middle12_cpl" 	tendon1="middle12_cpl"/>
+		<tendon name="middle23_cpl" 	tendon1="middle23_cpl"/>
+
+        <tendon name="finger2_12_cpl" 	tendon1="finger2_12_cpl"/>
+		<tendon name="finger2_23_cpl" 	tendon1="finger2_23_cpl"/>
+
+        <tendon name="finger1_12_cpl" 	tendon1="finger1_12_cpl"/>
+		<tendon name="finger1_23_cpl" 	tendon1="finger1_23_cpl"/>
+
+		<!-- SCISSOR Coupling -->
+		<!-- <joint name="finger_12_scissor" joint1="gripperpalm_finger_2_joint" joint2="gripperpalm_finger_1_joint" polycoef="0 -1 0 0 0"/> -->
+	</equality>
+
+    <actuator>
+      <!-- <motor ctrllimited="true" ctrlrange="-2.0944 2.0944" joint="joint1" gear="150"/>
+      <motor ctrllimited="true" ctrlrange="-3.1416 1.5708" joint="joint2" gear="150"/>
+      <motor ctrllimited="true" ctrlrange="-1.5708 3.1416" joint="joint4" gear="150"/>
+      <motor ctrllimited="true" ctrlrange="-2.0944 2.0944" joint="joint5" gear="150"/>
+      <motor ctrllimited="true" ctrlrange="-1.5708 1.5708" joint="joint6" gear="150"/>
+      <motor ctrllimited="true" ctrlrange="-1.5708 1.5708" joint="joint7" gear="150"/> -->
+      <motor ctrllimited="true" ctrlrange="-1.5708 1.5708" joint="thumb_base" gear="150"/>    
+      <!-- <motor ctrllimited="true" ctrlrange="-0.7854 1.5708" joint="thumb_prox" gear="150"/> -->
+      <!-- <motor ctrllimited="true" ctrlrange="-0.7854 1.5708" joint="index_prox" gear="150"/> -->
+      <!-- <motor ctrllimited="true" ctrlrange="-0.7854 1.5708" joint="ring_prox" gear="150"/>     -->
+
+        <!--Gripper-->
+        <!-- position control mode -->
+        <position name='finger_1' ctrllimited="true" kp="20" joint='ring_prox' ctrlrange='0 1.2217'/>
+        <position name='finger_2' ctrllimited="true" kp="20" joint='index_prox' ctrlrange='0 1.2217'/>
+        <position name='middle_finger'  ctrllimited="true" kp="20" joint='thumb_prox' ctrlrange='0 1.2217'/>
+        <!-- <position name='finger_scissor' ctrllimited="true" kp="20" joint='gripperpalm_finger_1_joint' ctrlrange="-0.2967 0.2967"/> -->
+
+        <!-- force control mode -->
+        <!-- <motor name='finger_1_T' ctrllimited="true" joint='gripperfinger_1_joint_1' ctrlrange='-0.1 .8' gear="20"/> -->
+        <!-- <motor name='finger_2_T' ctrllimited="true" joint='gripperfinger_2_joint_1' ctrlrange='-0.1 .8' gear="20"/> -->
+        <!-- <motor name='middle_finger_T'  ctrllimited="true" joint='gripperfinger_middle_joint_1' ctrlrange='-0.1 .8' gear="20"/> -->
+        <!-- <motor name='finger_scissor_T' ctrllimited="true" joint='gripperpalm_finger_1_joint' ctrlrange="-0.8 0.8" gear="15"/> -->
+
+    </actuator> 
+
+</mujoco>
+

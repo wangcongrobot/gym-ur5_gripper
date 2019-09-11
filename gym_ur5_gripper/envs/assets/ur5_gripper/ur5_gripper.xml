@@ -411,10 +411,10 @@ Control Engineering / Automation Engineering
 
         <!--Gripper-->
         <!-- position control mode -->
-        <!-- <position name='finger_1' ctrllimited="true" kp="20" joint='gripperfinger_1_joint_1' ctrlrange='0 1.2217'/> -->
-        <!-- <position name='finger_2' ctrllimited="true" kp="20" joint='gripperfinger_2_joint_1' ctrlrange='0 1.2217'/> -->
-        <!-- <position name='middle_finger'  ctrllimited="true" kp="20" joint='gripperfinger_middle_joint_1' ctrlrange='0 1.2217'/> -->
-        <!-- <position name='finger_scissor' ctrllimited="true" kp="20" joint='gripperpalm_finger_1_joint' ctrlrange="-0.2967 0.2967"/> --> 
+        <position name='finger_1' ctrllimited="true" kp="20" joint='gripperfinger_1_joint_1' ctrlrange='0 1.2217'/>
+        <position name='finger_2' ctrllimited="true" kp="20" joint='gripperfinger_2_joint_1' ctrlrange='0 1.2217'/>
+        <position name='middle_finger'  ctrllimited="true" kp="20" joint='gripperfinger_middle_joint_1' ctrlrange='0 1.2217'/>
+        <position name='finger_scissor' ctrllimited="true" kp="20" joint='gripperpalm_finger_1_joint' ctrlrange="-0.2967 0.2967"/> 
 
         <!-- force control mode -->
         <!-- <motor name='finger_1_T' ctrllimited="true" joint='gripperfinger_1_joint_1' ctrlrange='-0.1 .8' gear="20"/> -->
@@ -423,7 +423,7 @@ Control Engineering / Automation Engineering
         <!-- <motor name='finger_scissor_T' ctrllimited="true" joint='gripperpalm_finger_1_joint' ctrlrange="-0.8 0.8" gear="15"/> -->
     
         <!-- gripper joint -->
-        <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="gripperpalm_finger_1_joint" kp="20" name="gripper_palm_finger_1_joint" forcelimited="true" forcerange="-500 500"/>
+        <!-- <position ctrllimited="true" ctrlrange="-0.16 0.25" joint="gripperpalm_finger_1_joint" kp="20" name="gripper_palm_finger_1_joint" forcelimited="true" forcerange="-500 500"/>
         <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_1_joint_1" kp="2" name="gripper_finger_1_joint_1" forcelimited="true" forcerange="-20 20"/>
         <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_1_joint_2" kp="2" name="gripper_finger_1_joint_2" forcelimited="true" forcerange="-20 20"/>
         <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_1_joint_3" kp="2" name="gripper_finger_1_joint_3" forcelimited="true" forcerange="-20 20"/>
@@ -433,7 +433,7 @@ Control Engineering / Automation Engineering
         <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_2_joint_3" kp="2" name="gripper_finger_2_joint_3" forcelimited="true" forcerange="-20 20"/>
         <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_middle_joint_1" kp="2" name="gripper_finger_middle_joint_1" forcelimited="true" forcerange="-20 20"/>
         <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_middle_joint_2" kp="2" name="gripper_finger_middle_joint_2" forcelimited="true" forcerange="-20 20"/>
-        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_middle_joint_3" kp="2" name="gripper_finger_middle_joint_3" forcelimited="true" forcerange="-20 20"/>
+        <position ctrllimited="true" ctrlrange="0 3.1416" joint="gripperfinger_middle_joint_3" kp="2" name="gripper_finger_middle_joint_3" forcelimited="true" forcerange="-20 20"/> -->
     
     </actuator>
 
