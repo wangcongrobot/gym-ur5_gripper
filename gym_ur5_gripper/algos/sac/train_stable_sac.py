@@ -18,7 +18,7 @@ from stable_baselines.ddpg import AdaptiveParamNoiseSpec
 # for multiprocessing
 from stable_baselines.common.vec_env import DummyVecEnv, SubprocVecEnv
 from stable_baselines.common import set_global_seeds
-# from stable_baselines.common.cmd_util import make_mujoco_env, mujoco_arg_parser
+from stable_baselines.common.cmd_util import make_mujoco_env, mujoco_arg_parser
 # from stable_baselines.common.misc_util import mpi_rank_or_zero
 
 
@@ -40,22 +40,6 @@ def make_env(env_id, rank, seed=0):
         return env
     # set_global_seeds(seed)
     return _init
-
-def make_mujoco_env(env_id, seed, allow_early_resets=True):
-    """
-    Create a wrapped, monitored gym.Env for MuJoCo.
-
-    :param env_id: (str) the environment ID
-    :param seed: (int) the inital seed for RNG
-    :param allow_early_resets: (bool) allows early reset of the environment
-    :return: (Gym Environment) The mujoco environment
-    """
-    set_global_seeds(seed + 1)
-    env = gym.make(env_id)
-    # env = Monitor(env, os.path.join(logger.get_dir(), str(rank)), allow_early_resets=allow_early_resets)
-    # env = Monitor(env, os.path.join(logger.get_dir(), str(rank)), allow_early_resets=allow_early_resets)
-    env.seed(seed)
-    return env
 
 def callback(_locals, _globals):
   """

@@ -27,7 +27,7 @@ control mode:
 
 use mocap to control the end-effector
 position: (x,y,z)
-rotation: (w,x,y,z)
+// rotation: (w,x,y,z)
 
 ## robotiq 3 finger gripper
 

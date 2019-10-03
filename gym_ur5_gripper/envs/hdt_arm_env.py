@@ -64,6 +64,30 @@ class HDTArmEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.viewer.cam.elevation = -14.
 
     def compute_reward(self, action):
+
+        control_mult = -0.05
+        reach_mult = -0.1
+        grasp_mult = 10.
+        lift_mult = 1.0
+
+        reward_control = np.square(action).sum() * control_mult
+
+        obj_pos = self.sim.data.get_site_xpos('object')
+        palm_pos = self.sim.data.get_mocap_pos('robot0:mocap')
+        target_pos = self.sim.data.get_site_xpos('target')
+        dist = np.linalg.norm(palm_pos - obj_pos)
+        reward_reach = - dist
+
+        reward_grasp = 0
+        
+        reward = reward_control + reward_reach + reward_grasp
+
+        done = False
+        if self.sim.data.get_site_xpos('object')[2] > 0.1:
+            done = True
+        return reward, done 
+
+    def compute_reward_old(self, action):
         # compute sparse rewards
         # self._check_success()
         # reward 
@@ -72,9 +96,9 @@ class HDTArmEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         # if self.reward_shaping:
             # staged_rewards = self.staged_rewards()
             # reward += max(staged_rewards)
-        # staged_rewards = self.staged_rewards(action)
-        # reward = np.sum(staged_rewards)
-        reward = 0
+        staged_rewards = self.staged_rewards(action)
+        reward = np.sum(staged_rewards)
+
         # print("one step reward: ", reward)
 
         done = False
